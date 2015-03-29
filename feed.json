@@ -1,0 +1,86 @@
+{
+  "currency": "euro",
+  "money_symbol": "€",
+  "data": [{
+    "_id": 1,
+    "name": "Hotel Fantastique",
+    "address": "72b Rue de Awesome, 75001, Paris, France",
+    "description": "Located in the heart of Paris, this 5-star hotel offers elegant guest rooms in a Hausmannian-style building. It features a fitness centre, a concierge and a tour desk with ticket service.\n\nDecorated in a unique style, the air-conditioned guest rooms at the Hotel du Louvre are equipped with satellite TV, a minibar and free Wi-Fi access. Some rooms feature a seating area. All rooms have a private bathroom, some include marble features.\n\nThe hotel restaurant, Brasserie du Louvre, has a traditional Parisian decor and serves traditional French cuisine. A buffet breakfast is served every morning. Guests can also enjoy a cocktail and jazz evenings twice a week in the Defender Bar.\n\nThe 4 facades and terrace of this hotel overlook the famous Louvre Museum, the Opéra Garnier and the Comédie Française theatre.\n\nHotel du Louvre is situated 2 minutes from Palais Royal Metro Station, providing direct access to the Champs Elysees and the Place de la Bastille. Public parking is available nearby.",
+    "stars": 5,
+    "pictures": [{
+      "thumbnail": "img/1_thumb.jpg",
+      "image": "img/1.jpg"
+    },{
+      "thumbnail": "img/2_thumb.jpg",
+      "image": "img/2.jpg"
+    }],
+    "facilities": [
+      "Free Wifi", "Swimming Pool", "Gym", "24/7 reception", "Concierge", "Restaurant", "Free parking", "Shoe-Shine", "Satellite TV", "Room Service"
+    ],
+    "rooms": [{
+      "name": "Basic 2 Bed",
+      "occupancy": 2,
+      "price_per_room": 88.99,
+      "availability": 5
+    },{
+      "name": "Basic Family Room",
+      "occupancy": 4,
+      "price_per_room": 98.99,
+      "availability": 5
+    },{
+      "name": "Deluxe 2 Bed",
+      "occupancy": 2,
+      "price_per_room": 109.99,
+      "availability": 5
+    },{
+      "name": "Deluxe Family Room",
+      "occupancy": 7,
+      "price_per_room": 112.99,
+      "availability": 5
+    },{
+      "name": "Bridal Suite",
+      "occupancy": 2,
+      "price_per_room": 167.99,
+      "availability": 5
+    },{
+      "name": "President Suite",
+      "occupancy": 2,
+      "price_per_room": 301.99,
+      "availability": 5
+    },{
+      "name": "One+One",
+      "occupancy": 2,
+      "price_per_room": 78.99,
+      "availability": 5
+    },{
+      "name": "Single Room",
+      "occupancy": 1,
+      "price_per_room": 28.99,
+      "availability": 5
+    },{
+      "name": "Queen Room",
+      "occupancy": 2,
+      "price_per_room": 99.99,
+      "availability": 5
+    },{
+      "name": "Basement 1 Bed",
+      "occupancy": 2,
+      "price_per_room": 9.99,
+      "availability": 5
+    },{
+      "name": "Mega XL Suite",
+      "occupancy": 9,
+      "price_per_room": 412.99,
+      "availability": 5
+    }],
+    "reviews": [{
+      "score": 5,
+      "comment": "Pellentesque ligula nibh, lacinia eget pharetra ut, vulputate vitae odio. Donec non mattis nisi. Pellentesque elit leo, tincidunt nec felis vitae, aliquet imperdiet purus. In elit ante, vestibulum non accumsan at, volutpat eget dolor. Quisque ut tincidunt elit. Curabitur rutrum dignissim enim ac aliquet. Curabitur et aliquam nisl.",
+      "user": "Malcolm Reynolds"
+    },{
+      "score": 8,
+      "comment": "Duis ac nisi id lorem rhoncus tempus eu sit amet nisi. Aenean ultrices congue ligula, ac molestie velit ultricies a. Nulla ac nunc et nisi placerat interdum sit amet ut erat. Integer vulputate nulla id orci cursus, eget ullamcorper justo ultricies. Nulla lorem dui, euismod non porttitor eu, sagittis in lacus. In suscipit lectus non viverra luctus. Pellentesque egestas, dolor at luctus eleifend, velit dui viverra risus, ac rutrum sapien ante at massa. Donec imperdiet consequat laoreet. ",
+      "user": "Zoe Washburne"
+    }]
+  }]
+}

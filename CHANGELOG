@@ -1,0 +1,14 @@
+Notes:
+
+1. The file css.css on line 122 has a invalid CSS. This was fixed.
+2. The README file assumes that have to order tasks from 1 to 7, but is listed only 6 tasks.
+3. The price of rooms wasn't defined with currency because this value can be defined at backend.
+
+Tasks priority:
+
+1. JSON feed displaying similar hotels.
+2. Interactive location with map and nearby landmarks.
+3. Create photo carousel with thumbnails and automatic slideshow with prev/next buttons and displaying alt data.
+4. Sort the room table by columns (occupancy and price), display total and additional information by rooms.
+5. Split reviews with pagination and sorting by score.
+6. Improve the facilities block.

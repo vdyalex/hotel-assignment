@@ -1,0 +1,48 @@
+[{
+  currency: 'euro',
+  money_symbol: '€',
+  data: [
+    '{{repeat(5, 12)}}',
+    {
+      _id: '{{objectId()}}',
+      name: 'Hotel {{company()}}',
+      address: '{{integer(100, 999)}} {{street()}}, {{city()}}, {{state()}}, {{integer(100, 10000)}}',
+      description: '{{lorem(4, "paragraphs")}}',
+      stars: '{{integer(1, 5)}}',
+      pictures: [
+        '{{repeat(10, 14)}}',
+        function (q)
+        {
+          var t = q.integer(1, 14);
+          return {
+          thumbnail: 'img/' + t + '_thumb.jpg',
+          image: 'img/' + t + '.jpg'};
+      }
+      ],
+      facilities: [
+        '{{repeat(3, 10)}}',
+        function (q) {
+          return q.random('Free Wifi', 'Swimming Pool', 'Gym', '24/7 reception', 'Concierge', 'Restaurant', 'Free parking', 'Shoe-Shine', 'Satellite TV', 'Room Service');
+        }],
+      rooms: [
+        '{{repeat(5, 10)}}',
+        {
+          name: function (q) {
+          var r = ['Room', 'Bed', 'Suite', 'Family Room', 'XL Suite'],
+          s = ['Deluxe', 'President', 'Single', 'Basic', 'Mega', 'Double'];
+          return s[q.integer(0, r.length - 1)] + ' ' + r[q.integer(0, r.length - 1)];
+      },
+        occupancy: '{{integer(1,9)}}',
+        price_per_room: '{{integer(79, 499)}}.99'
+        }
+      ],
+      reviews: [
+        '{{repeat(15,30)}}',
+        {
+          score: '{{integer(1,10)}}',
+          comment: '{{lorem(1, "paragraphs")}}',
+          user: '{{firstName()}} {{surname()}}'
+        }
+      ]
+    }]
+}]
