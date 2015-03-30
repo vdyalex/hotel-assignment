@@ -2,21 +2,23 @@
   currency: 'euro',
   money_symbol: '€',
   data: [
-    '{{repeat(5, 12)}}',
+    '{{repeat(10, 20)}}',
     {
       _id: '{{objectId()}}',
       name: 'Hotel {{company()}}',
       address: '{{integer(100, 999)}} {{street()}}, {{city()}}, {{state()}}, {{integer(100, 10000)}}',
       description: '{{lorem(4, "paragraphs")}}',
       stars: '{{integer(1, 5)}}',
-      pictures: [
+      photos: [
         '{{repeat(10, 14)}}',
         function (q)
         {
           var t = q.integer(1, 14);
           return {
           thumbnail: 'img/' + t + '_thumb.jpg',
-          image: 'img/' + t + '.jpg'};
+          image: 'img/' + t + '_large.jpg',
+          description: lorem(6, "words")
+        };
       }
       ],
       facilities: [
@@ -33,7 +35,8 @@
           return s[q.integer(0, r.length - 1)] + ' ' + r[q.integer(0, r.length - 1)];
       },
         occupancy: '{{integer(1,9)}}',
-        price_per_room: '{{integer(79, 499)}}.99'
+        price_per_room: '{{integer(79, 499)}}.99',
+        availability: '{{integer(3, 5)}}'
         }
       ],
       reviews: [

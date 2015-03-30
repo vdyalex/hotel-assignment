@@ -5,14 +5,16 @@
     "_id": 1,
     "name": "Hotel Fantastique",
     "address": "72b Rue de Awesome, 75001, Paris, France",
-    "description": "Located in the heart of Paris, this 5-star hotel offers elegant guest rooms in a Hausmannian-style building. It features a fitness centre, a concierge and a tour desk with ticket service.\n\nDecorated in a unique style, the air-conditioned guest rooms at the Hotel du Louvre are equipped with satellite TV, a minibar and free Wi-Fi access. Some rooms feature a seating area. All rooms have a private bathroom, some include marble features.\n\nThe hotel restaurant, Brasserie du Louvre, has a traditional Parisian decor and serves traditional French cuisine. A buffet breakfast is served every morning. Guests can also enjoy a cocktail and jazz evenings twice a week in the Defender Bar.\n\nThe 4 facades and terrace of this hotel overlook the famous Louvre Museum, the Opéra Garnier and the Comédie Française theatre.\n\nHotel du Louvre is situated 2 minutes from Palais Royal Metro Station, providing direct access to the Champs Elysees and the Place de la Bastille. Public parking is available nearby.",
+    "description": "Located in the heart of Paris, this 5-star hotel offers elegant guest rooms in a Hausmannian-style building. It features a fitness centre, a concierge and a tour desk with ticket service.\nDecorated in a unique style, the air-conditioned guest rooms at the Hotel du Louvre are equipped with satellite TV, a minibar and free Wi-Fi access. Some rooms feature a seating area. All rooms have a private bathroom, some include marble features.\nThe hotel restaurant, Brasserie du Louvre, has a traditional Parisian decor and serves traditional French cuisine. A buffet breakfast is served every morning. Guests can also enjoy a cocktail and jazz evenings twice a week in the Defender Bar.\nThe 4 facades and terrace of this hotel overlook the famous Louvre Museum, the Opéra Garnier and the Comédie Française theatre.\nHotel du Louvre is situated 2 minutes from Palais Royal Metro Station, providing direct access to the Champs Elysees and the Place de la Bastille. Public parking is available nearby.",
     "stars": 5,
-    "pictures": [{
+    "photos": [{
       "thumbnail": "img/1_thumb.jpg",
-      "image": "img/1.jpg"
+      "image": "img/1.jpg",
+      "description": "Located in the heart of Paris, this 5-star hotel offers elegant guest rooms in a Hausmannian-style building."
     },{
       "thumbnail": "img/2_thumb.jpg",
-      "image": "img/2.jpg"
+      "image": "img/2.jpg",
+      "description": "It features a fitness centre, a concierge and a tour desk with ticket service."
     }],
     "facilities": [
       "Free Wifi", "Swimming Pool", "Gym", "24/7 reception", "Concierge", "Restaurant", "Free parking", "Shoe-Shine", "Satellite TV", "Room Service"
