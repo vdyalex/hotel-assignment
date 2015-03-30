@@ -40,10 +40,10 @@ $(document).ready(function () {
         bk.order = {
             rooms: {
                 asc: true,
-                field: 'occupancy'
+                field: 'price_per_room'
             },
             reviews:  {
-                asc: true,
+                asc: false,
                 field: 'score'
             }
         };
@@ -55,8 +55,8 @@ $(document).ready(function () {
                         '<section class="description"><h2>Description</h2></section>' +
                         '<section class="facilities"><h2>Facilities</h2><ul class="facilities_list"></ul></section>' +
                         '<section class="rooms"><h2>Select Your Room</h2><form method="post" action="" class="rooms_table_form">' +
-                        '<table class="rooms_table" cellspacing="0" cellpadding="0"><thead><tr><th class="room_name"><a class="sort" data-field="name" href="javascript:;">Room Name</a></th><th class="room_occupancy"><a class="sort" data-field="occupancy" href="javascript:;">Occupancy</a></th><th class="room_price"><a class="sort" data-field="price_per_room" href="javascript:;">Price per Room</a></th><th class="room_quantity">No. Rooms</th></tr></thead><tbody></tbody><tfoot><tr><td></td><td class="total_room_occupancy"></td><td class="total_room_price"></td><td class="total_room_quantity"></td></tr><tr><td colspan="4"><button class="button" type="submit">Book Now</button></td></tr></tfoot></table></form></section>' +
-                        '<section class="reviews"><h2>Reviews</h2><ul class="reviews_list"></ul></section>',
+                        '<table class="rooms_table" cellspacing="0" cellpadding="0"><thead><tr><th class="room_name"><a class="sort" data-value="name" href="javascript:;">Room Name</a></th><th class="room_occupancy"><a class="sort" data-value="occupancy" href="javascript:;">Occupancy</a></th><th class="room_price"><a class="sort" data-value="price_per_room" href="javascript:;">Price per Room</a></th><th class="room_quantity">No. Rooms</th></tr></thead><tbody></tbody><tfoot><tr><td></td><td class="total_room_occupancy"></td><td class="total_room_price"></td><td class="total_room_quantity"></td></tr><tr><td colspan="4"><button class="button" type="submit">Book Now</button></td></tr></tfoot></table></form></section>' +
+                        '<section class="reviews"><h2>Reviews<small><a href="javascript:;">Order by score</a></small></h2><ul class="reviews_list"></ul></section>',
 
             gallery:    '<div id="gallery">' +
                         '<div class="slides"></div>' +
@@ -96,9 +96,10 @@ $(document).ready(function () {
             bk._setPhotos(bk.data[offset].photos);
             bk._setDescription(bk.data[offset].description);
             bk._setFacilities(bk.data[offset].facilities);
-            bk._setRoomsColumns();
             bk._setRooms(bk.data[offset].rooms);
             bk._setReviews(bk.data[offset].reviews);
+
+            bk._setRoomsColumns();
         };
 
         bk.navigate = function (offset) {
@@ -169,20 +170,13 @@ $(document).ready(function () {
             for (var i = 0; i < facilities.length; i++) list.append('<li>' + facilities[i] + '</li>');
         };
 
-        bk._setRoomsColumns = function () {
-            $(bk.element).find('.rooms_table thead a').click(function() {
-                bk._orderRooms(!bk.order.rooms.asc, $(this).data('field'));
-            });
-        };
-
         bk._setRooms = function (rooms) {
             var table = $(bk.element).find('.rooms_table');
+                table.find('tbody').html('');
+                table.find('thead a').removeClass('asc').removeClass('desc');
+                table.find(".sort[data-value='" + bk.order.rooms.field + "']").addClass((bk.order.rooms.asc ? 'asc' : 'desc'));
 
-            var asc = (bk.order.rooms.asc ? 'asc' : 'desc');
-
-            var r = rooms.sort(bk._sortRooms[asc][bk.order.rooms.field]);
-
-            table.find('tbody').html('');
+                var r = rooms.sort(bk._sortRooms[(bk.order.rooms.asc ? 'asc' : 'desc')][bk.order.rooms.field]);
 
             for (var i = 0; i < r.length; i++) {
                 var s = '<td class="room_name">' + r[i].name + '</td>';
@@ -194,9 +188,18 @@ $(document).ready(function () {
             }
         };
 
-        bk._orderRooms = function (order, field) {
+        bk._setRoomsColumns = function () {
+            $(bk.element).find('.rooms_table thead a').click(function() {
+                bk._orderRooms(!bk.order.rooms.asc, $(this).data('value'));
+            });
+        };
+
+        bk._orderRooms = function (asc, field) {
+
+            if(bk.order.rooms.field !== field) asc = true;
+
             bk.order.rooms = {
-                asc: order,
+                asc: asc,
                 field: field
             };
 
@@ -223,9 +226,9 @@ $(document).ready(function () {
             }
         };
 
-        bk._orderReviews = function (order, field) {
+        bk._orderReviews = function (asc, field) {
             bk.order.reviews = {
-                asc: order,
+                asc: asc,
                 field: field
             };
 
@@ -242,6 +245,9 @@ $(document).ready(function () {
 
         bk._sortRooms = {
             asc: {
+                name: function (a, b) {
+                    return bk._sort(a, b, 'name', true);
+                },
                 occupancy:  function (a, b) {
                     return bk._sort(a, b, 'occupancy', true);
                 },
@@ -250,6 +256,9 @@ $(document).ready(function () {
                 }
             },
             desc: {
+                name: function (a, b) {
+                    return bk._sort(a, b, 'name', false);
+                },
                 occupancy:  function (a, b) {
                     return bk._sort(a, b, 'occupancy', false);
                 },
@@ -263,9 +272,6 @@ $(document).ready(function () {
             asc: {
                 score: function (a, b) {
                     return bk._sort(a, b, 'score', true);
-                },
-                date: function (a, b) {
-                    return bk._sort(a, b, 'date', true);
                 }
             },
             desc: {

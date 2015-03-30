@@ -114,6 +114,12 @@ h2 {
 
 /* reviews */
 
+.reviews h2 small {
+    float: right;
+    font-size: 12px;
+    margin: 5px 0;
+}
+
 .reviews_list {
 	list-style: none;
 	padding: 0;
@@ -200,6 +206,35 @@ h2 {
 	color: #FFF;
 	font-weight: bold;
 	padding: 10px 5px;
+}
+
+.rooms_table th a{
+    color: #FFF;
+    text-decoration: none;
+    position: relative;
+    margin-right: 10px;
+}
+
+.rooms_table th a.asc:after,
+.rooms_table th a.desc:after {
+    position: absolute;
+    right: -12px;
+    content: '';
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+.rooms_table th a.asc:after {
+    top: calc(50% - 2px);
+    border-width: 0 4px 4px 4px;
+    border-color: transparent transparent #FFF transparent;
+}
+
+.rooms_table th a.desc:after {
+    top: calc(50% - 2px);
+    border-width: 4px 4px 0 4px;
+    border-color: #FFF transparent transparent transparent;
 }
 
 .rooms_table .room_name {
