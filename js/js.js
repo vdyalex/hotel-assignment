@@ -17,11 +17,6 @@ $(document).ready(function () {
         }
     };
 
-    var order = {
-        table_room: 'default',
-        reviews: 'default'
-    };
-
     $.fn.booking = function (options) {
         options = options || {};
         var o = $.extend(true, {}, b.booking.options, options);
@@ -42,6 +37,17 @@ $(document).ready(function () {
 
         bk.data = {};
 
+        bk.order = {
+            rooms: {
+                asc: true,
+                field: 'occupancy'
+            },
+            reviews:  {
+                asc: true,
+                field: 'score'
+            }
+        };
+
         bk.defaults = {
             page:       '<nav class="feed_pagination"><a class="prev" href="javascript:;"></a><a class="next" href="javascript:;"></a></nav>' +
                         '<header class="header"><h1 class="hotel_name"><span class="title"></span><span class="name"></span> <span class="stars"></span></h1><address class="hotel_address"></address></header>' +
@@ -49,7 +55,7 @@ $(document).ready(function () {
                         '<section class="description"><h2>Description</h2></section>' +
                         '<section class="facilities"><h2>Facilities</h2><ul class="facilities_list"></ul></section>' +
                         '<section class="rooms"><h2>Select Your Room</h2><form method="post" action="" class="rooms_table_form">' +
-                        '<table class="rooms_table" cellspacing="0" cellpadding="0"><thead><tr><th class="room_name">Room Name</th><th class="room_occupancy">Occupancy</th><th class="room_price">Price per Room</th><th class="room_quantity">No. Rooms</th></tr></thead><tbody></tbody><tfoot><tr><td></td><td class="total_room_occupancy"></td><td class="total_room_price"></td><td class="total_room_quantity"></td></tr><tr><td colspan="4"><button class="button" type="submit">Book Now</button></td></tr></tfoot></table></form></section>' +
+                        '<table class="rooms_table" cellspacing="0" cellpadding="0"><thead><tr><th class="room_name"><a class="sort" data-field="name" href="javascript:;">Room Name</a></th><th class="room_occupancy"><a class="sort" data-field="occupancy" href="javascript:;">Occupancy</a></th><th class="room_price"><a class="sort" data-field="price_per_room" href="javascript:;">Price per Room</a></th><th class="room_quantity">No. Rooms</th></tr></thead><tbody></tbody><tfoot><tr><td></td><td class="total_room_occupancy"></td><td class="total_room_price"></td><td class="total_room_quantity"></td></tr><tr><td colspan="4"><button class="button" type="submit">Book Now</button></td></tr></tfoot></table></form></section>' +
                         '<section class="reviews"><h2>Reviews</h2><ul class="reviews_list"></ul></section>',
 
             gallery:    '<div id="gallery">' +
@@ -90,6 +96,7 @@ $(document).ready(function () {
             bk._setPhotos(bk.data[offset].photos);
             bk._setDescription(bk.data[offset].description);
             bk._setFacilities(bk.data[offset].facilities);
+            bk._setRoomsColumns();
             bk._setRooms(bk.data[offset].rooms);
             bk._setReviews(bk.data[offset].reviews);
         };
@@ -162,17 +169,38 @@ $(document).ready(function () {
             for (var i = 0; i < facilities.length; i++) list.append('<li>' + facilities[i] + '</li>');
         };
 
+        bk._setRoomsColumns = function () {
+            $(bk.element).find('.rooms_table thead a').click(function() {
+                bk._orderRooms(!bk.order.rooms.asc, $(this).data('field'));
+            });
+        };
+
         bk._setRooms = function (rooms) {
-            var tbody = $(bk.element).find('.rooms_table tbody');
+            var table = $(bk.element).find('.rooms_table');
 
-            for (var i = 0; i < rooms.length; i++) {
-                var s = '<td class="room_name">' + rooms[i].name + '</td>';
-                    s += '<td class="room_occupancy">' + rooms[i].occupancy + '</td>';
-                    s += '<td class="room_price">' + bk.options.money_symbol + rooms[i].price_per_room + '</td>';
-                    s += '<td class="room_quantity">' + bk._setAvailability(rooms[i]) + '</td>';
+            var asc = (bk.order.rooms.asc ? 'asc' : 'desc');
 
-                tbody.append('<tr>' + s + '</tr>');
+            var r = rooms.sort(bk._sortRooms[asc][bk.order.rooms.field]);
+
+            table.find('tbody').html('');
+
+            for (var i = 0; i < r.length; i++) {
+                var s = '<td class="room_name">' + r[i].name + '</td>';
+                    s += '<td class="room_occupancy">' + r[i].occupancy + '</td>';
+                    s += '<td class="room_price">' + bk.options.money_symbol + r[i].price_per_room + '</td>';
+                    s += '<td class="room_quantity">' + bk._setAvailability(r[i]) + '</td>';
+
+                table.find('tbody').append('<tr>' + s + '</tr>');
             }
+        };
+
+        bk._orderRooms = function (order, field) {
+            bk.order.rooms = {
+                asc: order,
+                field: field
+            };
+
+            bk._setRooms(bk.data[bk.offset].rooms);
         };
 
         bk._setReviews = function (reviews) {
@@ -180,15 +208,28 @@ $(document).ready(function () {
 
             if (reviews.length < 5) page = reviews.length;
 
+            var asc = (bk.order.reviews.asc ? 'asc' : 'desc');
+
+            var r = reviews.sort(bk._sortReviews[asc][bk.order.reviews.field]);
+
             for (var i = 0; i <= page - 1; i++) {
-                var s = '<strong class="review_score">' + reviews[i].score + '</strong>';
+                var s = '<strong class="review_score">' + r[i].score + '</strong>';
                     s += '<blockquote class="review_content">';
-                    s += reviews[i].comment;
-                    s += '<cite>' + reviews[i].user + '</cite>';
+                    s += r[i].comment;
+                    s += '<cite>' + r[i].user + '</cite>';
                     s += '</blockquote>';
 
                 list.append('<li>' + s + '</li>');
             }
+        };
+
+        bk._orderReviews = function (order, field) {
+            bk.order.reviews = {
+                asc: order,
+                field: field
+            };
+
+            bk._setReviews(bk.data[bk.offset].reviews);
         };
 
         bk._setAvailability = function (rooms) {
@@ -197,6 +238,52 @@ $(document).ready(function () {
             for (var i = 0; i <= rooms.availability; i++) select += '<option value="' + i + '"' + (i == 0 ? ' selected="selected"' : '') + '>' + i + '</option>';
 
             return '<select name="room[' + rooms.value + ']" data-value="' + rooms.price_per_room + '">' + select + '</select>';
+        };
+
+        bk._sortRooms = {
+            asc: {
+                occupancy:  function (a, b) {
+                    return bk._sort(a, b, 'occupancy', true);
+                },
+                price_per_room: function (a, b) {
+                    return bk._sort(a, b, 'price_per_room', true);
+                }
+            },
+            desc: {
+                occupancy:  function (a, b) {
+                    return bk._sort(a, b, 'occupancy', false);
+                },
+                price_per_room: function (a, b) {
+                    return bk._sort(a, b, 'price_per_room', false);
+                }
+            }
+        };
+
+        bk._sortReviews = {
+            asc: {
+                score: function (a, b) {
+                    return bk._sort(a, b, 'score', true);
+                },
+                date: function (a, b) {
+                    return bk._sort(a, b, 'date', true);
+                }
+            },
+            desc: {
+                score: function(a, b) {
+                    return bk._sort(a, b, 'score', false);
+                }
+            }
+        };
+
+        bk._sort = function (a, b, field, ascending) {
+            if(ascending) {
+                if (a[field] < b[field]) return -1;
+                if (a[field] > b[field]) return 1;
+            } else {
+                if (a[field] > b[field]) return -1;
+                if (a[field] < b[field]) return 1;
+            }
+            return 0;
         };
 
         bk._createGallery = function () {
