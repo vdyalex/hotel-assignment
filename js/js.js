@@ -38,6 +38,7 @@ $(document).ready(function () {
         bk.options = o;
         bk.offset = 0;
         bk.gallery = '#gallery';
+        bk.slide= 0;
 
         bk.data = {};
 
@@ -204,9 +205,6 @@ $(document).ready(function () {
                 $(bk.gallery).remove();
             }
             $(bk.element).after(bk.defaults.gallery);
-            $(bk.gallery).keyup(function(e){
-                if (e.keyCode == 27) bk._closeGallery();
-            });
 
             $(bk.gallery).find('.prev').click(function () {
                 bk._prevSlide();
@@ -221,10 +219,14 @@ $(document).ready(function () {
             });
         };
 
-        bk._openGallery = function (index) {
+        bk._openGallery = function (slide) {
+            bk.slide = slide;
+
+            $(bk.gallery).find('.slides').css('backgroundImage', 'url(' + bk.data[bk.offset].photos[slide].image + ')');
+
             $(document.body).height($(window).height()).css('overflow', 'hidden');
-            $(bk.gallery).find('.slides').css('backgroundImage', 'url(' + bk.data[bk.offset].photos[index].image + ')');
             $(bk.gallery).show().animate({opacity: 1}, 400);
+
             bk._createListeners();
         };
 
@@ -235,23 +237,50 @@ $(document).ready(function () {
         };
 
         bk._prevSlide = function () {
+
+            bk.slide--;
+            if(bk.slide <= 0) bk.slide = (bk.data[bk.offset].photos.length - 1);
+            bk._changeSlide();
         };
 
         bk._nextSlide = function () {
-            $(bk.element).find('.slides').animate({'left': (0 - ($(this).width))});
+            bk.slide++;
+            if(bk.slide > (bk.data[bk.offset].photos.length - 1)) bk.slide = 0;
+            bk._changeSlide();
+        };
+
+        bk._changeSlide = function () {
+            $(bk.gallery)
+                .find('.slides')
+                .fadeOut(200, function() {
+                    $(this)
+                        .css('backgroundImage', 'url(' + bk.data[bk.offset].photos[bk.slide].image + ')')
+                        .fadeIn(200);
+                }
+            );
         };
 
         bk._createListeners = function () {
             $(document.body).on('keydown', function(event) {
-                switch (event.which || event.keyCode) {
+                console.log(event.keyCode);
+                switch(event.which || event.keyCode) {
+                    case 8: // Backspace
+                    case 37: // Left arrow
+                    case 38: // Up arrow
+                        bk._preventDefault(event);
+                        bk._prevSlide();
+                        break;
+                    case 9: // Tab
+                    case 13: // Enter
+                    case 32: // Space bar
+                    case 39: // Right arrow
+                    case 40: // Down arrow
+                        bk._preventDefault(event);
+                        bk._nextSlide();
+                        break;
                     case 27: // Esc
+                        bk._preventDefault(event);
                         bk._closeGallery();
-                        break;
-                    case 32: // Space
-                        break;
-                    case 37: // Left
-                        break;
-                    case 39: // Right
                         break;
                 }
             });

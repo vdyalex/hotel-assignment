@@ -309,6 +309,11 @@ h2 {
     color: #FFF;
 }
 
+#gallery .prev:hover,
+#gallery .next:hover {
+    color: #8BA8D7;
+}
+
 #gallery .prev {
     left: 15px;
 }
