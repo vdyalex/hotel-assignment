@@ -34,6 +34,9 @@
           s = ['Deluxe', 'President', 'Single', 'Basic', 'Mega', 'Double'];
           return s[q.integer(0, r.length - 1)] + ' ' + r[q.integer(0, r.length - 1)];
       },
+        value: function () {
+          return this.name.toLowerCase().replace(new RegExp(' ', 'g'), '');
+        },
         occupancy: '{{integer(1,9)}}',
         price_per_room: '{{integer(79, 499)}}.99',
         availability: '{{integer(3, 5)}}'

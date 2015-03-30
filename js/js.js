@@ -37,18 +37,25 @@ $(document).ready(function () {
         bk.element = e;
         bk.options = o;
         bk.offset = 0;
+        bk.gallery = '#gallery';
 
         bk.data = {};
 
-        bk.defaults =
-            '<nav class="feed_pagination"><a class="prev" href="javascript:;"></a><a class="next" href="javascript:;"></a></nav>' +
-            '<header class="header"><h1 class="hotel_name"><span class="title"></span><span class="name"></span> <span class="stars"></span></h1><address class="hotel_address"></address></header>' +
-            '<section class="photos"><ul class="photos_list"></ul></section>' +
-            '<section class="description"><h2>Description</h2></section>' +
-            '<section class="facilities"><h2>Facilities</h2><ul class="facilities_list"></ul></section>' +
-            '<section class="rooms"><h2>Select Your Room</h2><form method="post" action="" class="rooms_table_form">' +
-            '<table class="rooms_table" cellspacing="0" cellpadding="0"><thead><tr><th class="room_name">Room Name</th><th class="room_occupancy">Occupancy</th><th class="room_price">Price per Room</th><th class="room_quantity">No. Rooms</th></tr></thead><tbody></tbody><tfoot><tr><td></td><td class="total_room_occupancy"></td><td class="total_room_price"></td><td class="total_room_quantity"></td></tr><tr><td colspan="4"><button class="button" type="submit">Book Now</button></td></tr></tfoot></table></form></section>' +
-            '<section class="reviews"><h2>Reviews</h2><ul class="reviews_list"></ul></section>';
+        bk.defaults = {
+            page:       '<nav class="feed_pagination"><a class="prev" href="javascript:;"></a><a class="next" href="javascript:;"></a></nav>' +
+                        '<header class="header"><h1 class="hotel_name"><span class="title"></span><span class="name"></span> <span class="stars"></span></h1><address class="hotel_address"></address></header>' +
+                        '<section class="photos"><ul class="photos_list"></ul></section>' +
+                        '<section class="description"><h2>Description</h2></section>' +
+                        '<section class="facilities"><h2>Facilities</h2><ul class="facilities_list"></ul></section>' +
+                        '<section class="rooms"><h2>Select Your Room</h2><form method="post" action="" class="rooms_table_form">' +
+                        '<table class="rooms_table" cellspacing="0" cellpadding="0"><thead><tr><th class="room_name">Room Name</th><th class="room_occupancy">Occupancy</th><th class="room_price">Price per Room</th><th class="room_quantity">No. Rooms</th></tr></thead><tbody></tbody><tfoot><tr><td></td><td class="total_room_occupancy"></td><td class="total_room_price"></td><td class="total_room_quantity"></td></tr><tr><td colspan="4"><button class="button" type="submit">Book Now</button></td></tr></tfoot></table></form></section>' +
+                        '<section class="reviews"><h2>Reviews</h2><ul class="reviews_list"></ul></section>',
+
+            gallery:    '<div id="gallery">' +
+                        '<div class="slides"></div>' +
+                        '<a class="prev" href="javascript:;">&#10094;</a><a class="next" href="javascript:;">&#10095;</a>' +
+                        '</div>'
+        };
 
         bk.init = function () {
             if(bk.options.url !== "undefined") {
@@ -66,7 +73,7 @@ $(document).ready(function () {
         };
 
         bk.reset = function () {
-            $(bk.element).html(bk.defaults).fadeIn();
+            $(bk.element).html(bk.defaults.page).fadeIn();
         };
 
         bk.run = function (offset) {
@@ -133,7 +140,14 @@ $(document).ready(function () {
 
         bk._setPhotos = function (photos) {
             var list = $('.photos_list');
-            for (var i = 0; i < photos.length; i++) list.append('<li><a href="' + photos[i].image + '"><img src="' + photos[i].thumbnail + '" alt="' + photos[i].description + '" title="' + photos[i].description + '"></a></li>');
+            for (var i = 0; i < photos.length; i++) list.append('<li><a data-index="' + i + '" href="' + photos[i].image + '"><img src="' + photos[i].thumbnail + '" alt="' + photos[i].description + '" title="' + photos[i].description + '"></a></li>');
+
+            bk._createGallery();
+
+            list.find('a').click(function(e) {
+                bk._preventDefault(e);
+                bk._openGallery($(this).data('index'));
+            });
         };
 
         bk._setDescription = function (description) {
@@ -181,7 +195,86 @@ $(document).ready(function () {
 
             for (var i = 0; i <= rooms.availability; i++) select += '<option value="' + i + '"' + (i == 0 ? ' selected="selected"' : '') + '>' + i + '</option>';
 
-            return '<select name="room[' + rooms.name + ']" data-value="' + rooms.price_per_room + '">' + select + '</select>';
+            return '<select name="room[' + rooms.value + ']" data-value="' + rooms.price_per_room + '">' + select + '</select>';
+        };
+
+        bk._createGallery = function () {
+            if($(bk.gallery).length)
+            {
+                $(bk.gallery).remove();
+            }
+            $(bk.element).after(bk.defaults.gallery);
+            $(bk.gallery).keyup(function(e){
+                if (e.keyCode == 27) bk._closeGallery();
+            });
+
+            $(bk.gallery).find('.prev').click(function () {
+                bk._prevSlide();
+            });
+
+            $(bk.gallery).find('.next').click(function () {
+                bk._nextSlide();
+            });
+
+            $(bk.gallery).click(function(){
+                //bk._closeGallery();
+            });
+        };
+
+        bk._openGallery = function (index) {
+            $(document.body).height($(window).height()).css('overflow', 'hidden');
+            $(bk.gallery).find('.slides').css('backgroundImage', 'url(' + bk.data[bk.offset].photos[index].image + ')');
+            $(bk.gallery).show().animate({opacity: 1}, 400);
+            bk._createListeners();
+        };
+
+        bk._closeGallery = function () {
+            bk._destroyListeners();
+            $(bk.gallery).fadeOut();
+            $(document.body).height('auto').css('overflow', 'auto');
+        };
+
+        bk._prevSlide = function () {
+        };
+
+        bk._nextSlide = function () {
+            $(bk.element).find('.slides').animate({'left': (0 - ($(this).width))});
+        };
+
+        bk._createListeners = function () {
+            $(document.body).on('keydown', function(event) {
+                switch (event.which || event.keyCode) {
+                    case 27: // Esc
+                        bk._closeGallery();
+                        break;
+                    case 32: // Space
+                        break;
+                    case 37: // Left
+                        break;
+                    case 39: // Right
+                        break;
+                }
+            });
+        };
+
+        bk._destroyListeners = function () {
+            $(document.body).off('keydown');
+        };
+
+        bk._preventDefault = function (event) {
+            if (event.preventDefault) {
+                event.preventDefault();
+            } else {
+                event.returnValue = false;
+            }
+        };
+
+        bk._stopPropagation = function (event) {
+            if (event.stopPropagation) {
+                event.stopPropagation();
+            } else {
+                event.cancelBubble = true;
+            }
         };
 
         bk.init();
