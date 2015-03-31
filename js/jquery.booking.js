@@ -52,9 +52,9 @@
                         '<section class="reviews"><h2>Reviews<small>Sort by<div class="sorting"><a class="dropdown"></a><ul><li><a data-filter="highest_score" href="javascript:;">Highest score</a></li><li><a data-filter="lowest_score" href="javascript:;">Lowest score</a></li><li><a data-filter="most_recent" href="javascript:;">Most recent</a></li><li><a data-filter="most_older" href="javascript:;">Most older</a></li></ul></div></small></h2><ul class="reviews_list"></ul></section>',
 
             gallery:    '<div id="gallery">' +
-                        '<div class="slides">' +
+                        '<div class="slide">' +
                         '<a class="close" href="javascript:;">Exit <b>&times;</b></a>' +
-                        '<div class="label"><h1 class="hotel_name"><span class="title"></span> <span class="stars"></span></h1><div class="text"></div></div>' +
+                        '<div class="label"><h1 class="hotel_name"><span class="title"></span> <span class="stars"></span></h1><div class="text"></div><div class="counter"></div><a class="slideshow" href="javascript:;">&#9658;</a></div>' +
                         '</div>' +
                         '<a class="prev" href="javascript:;">&#10094;</a><a class="next" href="javascript:;">&#10095;</a>' +
                         '</div>'
@@ -388,12 +388,18 @@
             bk._changeSlide();
         };
 
-        bk._changeSlide = function (init) {
-            $(bk.gallery).find('.slides').css('backgroundImage', 'url(' + bk.data[bk.offset].photos[bk.slide].image + ')');
-            $(bk.gallery).find('.label .hotel_name .title').html(bk.data[bk.offset].name);
-            $(bk.gallery).find('.label .hotel_name .stars').html(bk._buildStars(bk.data[bk.offset].stars));
-            $(bk.gallery).find('.label .hotel_address').html(bk.data[bk.offset].address);
-            $(bk.gallery).find('.label .text').html(bk.data[bk.offset].photos[bk.slide].description);
+        bk._changeSlide = function () {
+            $(bk.gallery).find('.slide').css('backgroundImage', 'url(' + bk.data[bk.offset].photos[bk.slide].image + ')');
+            $(bk.gallery).find('.slide .label .hotel_name .title').html(bk.data[bk.offset].name);
+            $(bk.gallery).find('.slide .label .hotel_name .stars').html(bk._buildStars(bk.data[bk.offset].stars));
+            $(bk.gallery).find('.slide .label .hotel_address').html(bk.data[bk.offset].address);
+            $(bk.gallery).find('.slide .label .text').html(bk.data[bk.offset].photos[bk.slide].description);
+            $(bk.gallery).find('.slide .label .counter').html('Showing ' + (bk.slide + 1) + ' of ' + bk.data[bk.offset].photos.length + '.');
+        };
+
+        bk._setSlideshow = function () {
+            $(bk.gallery).find('.slideshow').html('&#10074;&#10074;');
+            var timer = setInterval(bk._nextSlide, 3000);
         };
 
         bk._createListeners = function () {
@@ -406,9 +412,11 @@
                         bk._preventDefault(event);
                         bk._prevSlide();
                         break;
+                    case 32: // Space bar
+                        bk._setSlideshow();
+                        break;
                     case 9: // Tab
                     case 13: // Enter
-                    case 32: // Space bar
                     case 39: // Right arrow
                     case 40: // Down arrow
                         bk._preventDefault(event);

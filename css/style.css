@@ -319,7 +319,7 @@ h2 {
     left: 0px;
 }
 
-#gallery .slides {
+#gallery .slide {
     position: relative;
     width: 100%;
     height: 100%;
@@ -329,7 +329,7 @@ h2 {
     background-repeat: no-repeat;
 }
 
-#gallery .slides .label {
+#gallery .slide .label {
     position: absolute;
     box-sizing: border-box;
     width: 100%;
@@ -340,15 +340,49 @@ h2 {
     font-size: 16px;
 }
 
-#gallery .slides .label .text:first-letter {
+#gallery .slide .label .text:first-letter {
     text-transform: uppercase;
 }
 
-#gallery .slides .label .text:after {
+#gallery .slide .label .text:after {
     content: '.';
 }
 
-#gallery .slides .close {
+#gallery .slide .label .slideshow {
+    position: absolute;
+    right: 0;
+    font-size: 36px;
+    color: #FFF;
+    border-radius: 60px;
+    background-color: #0896FF;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    margin: 30px;
+    bottom: 0;
+    box-sizing: border-box;
+    padding: 0px 14px;
+    z-index: 2000;
+    text-decoration: none;
+}
+
+#gallery .slide .label .slideshow:hover {
+    background-color: #003580;
+}
+
+#gallery .slide .label .counter {
+    position: absolute;
+    right: 0;
+    padding: 5px;
+    bottom: 0;
+    font-size: 11px;
+    width: 110px;
+    text-align: center;
+}
+
+#gallery .slide .close {
     position: absolute;
     display: block;
     top: 16px;
@@ -362,7 +396,7 @@ h2 {
     opacity: 0.7;
 }
 
-#gallery .slides .close:hover {
+#gallery .slide .close:hover {
     opacity: 1;
 }
 
