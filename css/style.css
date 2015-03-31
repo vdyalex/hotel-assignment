@@ -376,6 +376,9 @@ h2 {
     z-index: 999999;
     overflow: hidden;
     background-color: rgba(0, 0, 0, 0.9);
+    background-image: url('../ico/preloader.gif');
+    background-position: center center;
+    background-repeat: no-repeat;
     opacity: 0;
     display: none;
     top: 0px;
