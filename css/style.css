@@ -161,6 +161,10 @@ h2 {
 	margin-top: 5px;
 }
 
+.reviews {
+    border-top: 1px dotted #D9E1EC;
+}
+
 .reviews .pagination {
     margin-top: 24px;
     text-align: center;
