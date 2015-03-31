@@ -6,9 +6,9 @@ Notes:
 
 Tasks priority:
 
-1. JSON feed displaying similar hotels.
+1. JSON feed displaying similar hotels. [OK]
 2. Interactive location with map and nearby landmarks.
-3. Create photo carousel with thumbnails and automatic slideshow with prev/next buttons and displaying alt data.
+3. Create photo carousel with thumbnails and automatic slideshow with prev/next buttons and displaying alt data. [OK]
 4. Sort the room table by columns (occupancy and price), display total and additional information by rooms.
 5. Split reviews with pagination and sorting by score.
 6. Improve the facilities block.

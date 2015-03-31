@@ -50,7 +50,7 @@ $(document).ready(function () {
 
         bk.defaults = {
             page:       '<nav class="feed_pagination"><a class="prev" href="javascript:;"></a><a class="next" href="javascript:;"></a></nav>' +
-                        '<header class="header"><h1 class="hotel_name"><span class="title"></span><span class="name"></span> <span class="stars"></span></h1><address class="hotel_address"></address></header>' +
+                        '<header class="header"><h1 class="hotel_name"><span class="title"></span> <span class="stars"></span></h1><address class="hotel_address"></address></header>' +
                         '<section class="photos"><ul class="photos_list"></ul></section>' +
                         '<section class="description"><h2>Description</h2></section>' +
                         '<section class="facilities"><h2>Facilities</h2><ul class="facilities_list"></ul></section>' +
@@ -59,7 +59,10 @@ $(document).ready(function () {
                         '<section class="reviews"><h2>Reviews<small><a href="javascript:;">Order by score</a></small></h2><ul class="reviews_list"></ul></section>',
 
             gallery:    '<div id="gallery">' +
-                        '<div class="slides"></div>' +
+                        '<div class="slides">' +
+                        '<a class="close" href="javascript:;">&times; Exit</a>' +
+                        '<div class="label"><h1 class="hotel_name"><span class="title"></span> <span class="stars"></span></h1><div class="text"></div></div>' +
+                        '</div>' +
                         '<a class="prev" href="javascript:;">&#10094;</a><a class="next" href="javascript:;">&#10095;</a>' +
                         '</div>'
         };
@@ -137,10 +140,15 @@ $(document).ready(function () {
         };
 
         bk._setStars = function (stars) {
+
+            $(bk.element).find('.hotel_name .stars').html(bk._buildStars(stars));
+        };
+
+        bk._buildStars = function (stars) {
             var s = '';
             for (var i = 0; i < stars; i++) s += '\u2605';
 
-            $(bk.element).find('.hotel_name .stars').html(s);
+            return s;
         };
 
         bk._setAddress = function (address) {
@@ -299,6 +307,10 @@ $(document).ready(function () {
             }
             $(bk.element).after(bk.defaults.gallery);
 
+            $(bk.gallery).find('.close').click(function () {
+                bk._closeGallery();
+            });
+
             $(bk.gallery).find('.prev').click(function () {
                 bk._prevSlide();
             });
@@ -315,7 +327,7 @@ $(document).ready(function () {
         bk._openGallery = function (slide) {
             bk.slide = slide;
 
-            $(bk.gallery).find('.slides').css('backgroundImage', 'url(' + bk.data[bk.offset].photos[slide].image + ')');
+            bk._changeSlide();
 
             $(document.body).height($(window).height()).css('overflow', 'hidden');
             $(bk.gallery).show().animate({opacity: 1}, 400);
@@ -342,15 +354,12 @@ $(document).ready(function () {
             bk._changeSlide();
         };
 
-        bk._changeSlide = function () {
-            $(bk.gallery)
-                .find('.slides')
-                .fadeOut(200, function() {
-                    $(this)
-                        .css('backgroundImage', 'url(' + bk.data[bk.offset].photos[bk.slide].image + ')')
-                        .fadeIn(200);
-                }
-            );
+        bk._changeSlide = function (init) {
+            $(bk.gallery).find('.slides').css('backgroundImage', 'url(' + bk.data[bk.offset].photos[bk.slide].image + ')');
+            $(bk.gallery).find('.label .hotel_name .title').html(bk.data[bk.offset].name);
+            $(bk.gallery).find('.label .hotel_name .stars').html(bk._buildStars(bk.data[bk.offset].stars));
+            $(bk.gallery).find('.label .hotel_address').html(bk.data[bk.offset].address);
+            $(bk.gallery).find('.label .text').html(bk.data[bk.offset].photos[bk.slide].description);
         };
 
         bk._createListeners = function () {
