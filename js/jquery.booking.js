@@ -29,6 +29,9 @@
 
         bk.timer;
         bk.isPlaying = false;
+        bk.reviewsPerPage = 5;
+        bk.reviewsPages = 1;
+        bk.reviewsOffset = 0;
 
         bk.data = {};
 
@@ -51,8 +54,8 @@
                         '<section class="description"><h2>Description</h2></section>' +
                         '<section class="facilities"><h2>Facilities</h2><ul class="facilities_list"></ul></section>' +
                         '<section class="rooms"><h2>Select Your Room</h2><form method="post" action="" class="rooms_table_form">' +
-                        '<table class="rooms_table" cellspacing="0" cellpadding="0"><thead><tr><th class="room_name"><a class="sort" data-filter="name" href="javascript:;">Room Name</a></th><th class="room_occupancy"><a class="sort" data-filter="occupancy" href="javascript:;">Occupancy</a></th><th class="room_price"><a class="sort" data-filter="price_per_room" href="javascript:;">Price per Room</a></th><th class="room_quantity">No. Rooms</th></tr></thead><tbody></tbody><tfoot><tr><td></td><td class="total_room_occupancy"></td><td class="total_room_price"></td><td class="total_room_quantity"></td></tr><tr><td colspan="4"><button class="button" type="submit">Book Now</button></td></tr></tfoot></table></form></section>' +
-                        '<section class="reviews"><h2>Reviews<small>Sort by<div class="sorting"><a class="dropdown"></a><ul><li><a data-filter="highest_score" href="javascript:;">Highest score</a></li><li><a data-filter="lowest_score" href="javascript:;">Lowest score</a></li><li><a data-filter="most_recent" href="javascript:;">Most recent</a></li><li><a data-filter="most_older" href="javascript:;">Most older</a></li></ul></div></small></h2><ul class="reviews_list"></ul></section>',
+                        '<table class="rooms_table" cellspacing="0" cellpadding="0"><thead><tr><th class="room_name"><a class="sort" data-filter="name" href="javascript:;" title="Sort by Room Name">Room Name</a></th><th class="room_occupancy"><a class="sort" data-filter="occupancy" href="javascript:;" title="Sort by Occupancy">Occupancy</a></th><th class="room_price"><a class="sort" data-filter="price_per_room" href="javascript:;" title="Sort by Price per Room">Price per Room</a></th><th class="room_quantity">No. Rooms</th></tr></thead><tbody></tbody><tfoot><tr><td></td><td class="total_room_occupancy"></td><td class="total_room_price"></td><td class="total_room_quantity"></td></tr><tr><td colspan="4"><button class="button" type="submit">Book Now</button></td></tr></tfoot></table></form></section>' +
+                        '<section class="reviews"><h2>Reviews<small>Sort by<div class="sorting"><a class="dropdown"></a><ul><li><a data-filter="highest_score" href="javascript:;">Highest score</a></li><li><a data-filter="lowest_score" href="javascript:;">Lowest score</a></li><li><a data-filter="most_recent" href="javascript:;">Most recent</a></li><li><a data-filter="most_older" href="javascript:;">Most older</a></li></ul></div></small></h2><ul class="reviews_list"></ul><div class="pagination"><a class="prev" href="javascript:;">&#8249; Previous</a><ul></ul><a class="next" href="javascript:;">Next &#8250;</a></div></section>',
 
             gallery:    '<div id="gallery">' +
                         '<div class="slide">' +
@@ -97,9 +100,6 @@
             bk._setFacilities(bk.data[offset].facilities);
             bk._setRooms(bk.data[offset].rooms);
             bk._setReviews(bk.data[offset].reviews);
-
-            bk._setRoomsColumns();
-            bk._setReviewsFilters();
         };
 
         bk.navigate = function (offset) {
@@ -126,6 +126,10 @@
             $(bk.element).find('.feed_pagination .next').click(function () {
                 bk.navigate(bk.nextOffset());
             }).html(bk.data[bk.nextOffset()].name + ' &#8594;');
+
+            bk._setRoomsColumns();
+            bk._setReviewsFilters();
+            bk._createReviewsPagination();
         };
 
         bk._setTitle = function (title) {
@@ -245,17 +249,17 @@
         };
 
         bk._setReviews = function (reviews) {
-            var list = $(bk.element).find('.reviews_list'), page = 5;
+            var list = $(bk.element).find('.reviews_list'), page = bk.reviewsPerPage;
+
+            bk._handleReviewsPagination();
 
             $(bk.element).find('.sorting .dropdown').html(bk.order.reviews.text);
-
-            if (reviews.length < 5) page = reviews.length;
 
             var r = reviews.sort(bk._sortReviews[(bk.order.reviews.asc ? 'asc' : 'desc')][bk.order.reviews.field]);
 
             $(bk.element).find('.reviews_list').html('');
 
-            for (var i = 0; i <= page - 1; i++) {
+            for (var i = (bk.reviewsOffset * bk.reviewsPerPage); i <= (((bk.reviewsOffset + 1) * bk.reviewsPerPage) - 1); i++) {
                 var s = '<strong class="review_score">' + r[i].score + '</strong>';
                     s += '<blockquote class="review_content">';
                     s += r[i].comment;
@@ -266,12 +270,70 @@
             }
         };
 
+        bk._createReviewsPagination = function () {
+
+            var pagination = $(bk.element).find('.reviews .pagination');
+
+            bk.reviewsPages = Math.round(bk.data[bk.offset].reviews.length / bk.reviewsPerPage);
+            bk.reviewsOffset = 0;
+
+            pagination.find('a.prev').click(function (){
+                bk._prevPageReviews();
+            });
+
+            pagination.find('a.next').click(function (){
+                bk._nextPageReviews();
+            });
+
+            for(var i = 0; i < bk.reviewsPages; i++) {
+                pagination.find('ul').append('<li><a class="page" data-page="' + i + '" href="javascript:;">' + (i + 1) + '</a></li>');
+            }
+
+            pagination.find('li a').click(function (){
+                bk._paginateReviews($(this).data('page'));
+            });
+        };
+
+        bk._handleReviewsPagination = function () {
+            var pagination = $(bk.element).find('.reviews .pagination');
+
+            pagination.find('a.prev, a.next').removeClass('disabled');
+
+            if(bk.reviewsOffset == 0) {
+                pagination.find('a.prev').addClass('disabled');
+            } else if(bk.reviewsOffset == (bk.reviewsPages - 1)) {
+                pagination.find('a.next').addClass('disabled');
+            }
+
+            pagination.find('li a').removeClass('active');
+            pagination.find("li a[data-page='" + bk.reviewsOffset + "']").addClass('active');
+        };
+
+        bk._paginateReviews = function (page) {
+            bk.reviewsOffset = (page >= 0 && page < bk.reviewsPages ? page : 0);
+            bk._setReviews(bk.data[bk.offset].reviews);
+        };
+
+        bk._prevPageReviews = function () {
+            bk.reviewsOffset--;
+            if(bk.reviewsOffset < 0) bk.reviewsOffset = 0;
+            bk._setReviews(bk.data[bk.offset].reviews);
+        };
+
+        bk._nextPageReviews = function () {
+            bk.reviewsOffset++;
+            if(bk.reviewsOffset >= (bk.reviewsPages - 1)) bk.reviewsOffset = (bk.reviewsPages - 1);
+            bk._setReviews(bk.data[bk.offset].reviews);
+        };
+
         bk._setReviewsFilters = function () {
             $(bk.element).find('.sorting .dropdown').click(function(){
                 $(this).parent().toggleClass('open');
             });
 
             $(bk.element).find('.sorting li a').click(function(index, value) {
+                bk.reviewsOffset = 0;
+
                 $(bk.element).find('.sorting').removeClass('open');
                 bk._orderReviews($(this).data('filter'));
             });
@@ -363,10 +425,6 @@
             $(bk.gallery).find('.next').click(function () {
                 bk._nextSlide();
             });
-
-            $(bk.gallery).click(function(){
-                //bk._closeGallery();
-            });
         };
 
         bk._openGallery = function (slide) {
@@ -413,7 +471,7 @@
             $(bk.gallery).find('.slide .label .hotel_name .stars').html(bk._buildStars(bk.data[bk.offset].stars));
             $(bk.gallery).find('.slide .label .hotel_address').html(bk.data[bk.offset].address);
             $(bk.gallery).find('.slide .label .text').html(bk.data[bk.offset].photos[bk.slide].description);
-            $(bk.gallery).find('.slide .label .counter').html('Showing ' + (bk.slide + 1) + ' of ' + bk.data[bk.offset].photos.length + '.');
+            $(bk.gallery).find('.slide .label .counter').html('Showing photo ' + (bk.slide + 1) + ' of ' + bk.data[bk.offset].photos.length + '.');
         };
 
         bk._startSlideshow = function () {

@@ -161,6 +161,55 @@ h2 {
 	margin-top: 5px;
 }
 
+.reviews .pagination {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.reviews .pagination ul,
+.reviews .pagination li {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.reviews .pagination a {
+    background-color: #E6EDF6;
+    color: #0896FF;
+    border: 1px solid #FFF;
+    padding: 5px 15px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.reviews .pagination a:not(.disabled):hover,
+.reviews .pagination li a.active {
+    background-color: #D4E1F1;
+    color: #003580;
+}
+
+.reviews .pagination > a:first-child {
+    border-radius: 4px 0 0 4px;
+}
+
+.reviews .pagination > a:last-child {
+    border-radius: 0 4px 4px 0;
+}
+
+.reviews .pagination > a.disabled {
+    color: #D1DCF0;
+    cursor: default;
+}
+
+.reviews .pagination li:first-child a {
+    border-left: 0;
+}
+
+.reviews .pagination li a {
+    border-right: 0;
+}
+
 /* rooms table */
 
 .button {
@@ -208,11 +257,15 @@ h2 {
 	padding: 10px 5px;
 }
 
-.rooms_table th a{
+.rooms_table th a {
     color: #FFF;
     text-decoration: none;
     position: relative;
     margin-right: 10px;
+}
+
+.rooms_table th a:hover {
+    color: #FEBA02;
 }
 
 .rooms_table th a.asc:after,
@@ -231,10 +284,18 @@ h2 {
     border-color: transparent transparent #FFF transparent;
 }
 
+.rooms_table th a.asc:hover:after {
+    border-color: transparent transparent #FEBA02 transparent;
+}
+
 .rooms_table th a.desc:after {
     top: calc(50% - 2px);
     border-width: 4px 4px 0 4px;
     border-color: #FFF transparent transparent transparent;
+}
+
+.rooms_table th a.desc:hover:after {
+    border-color: #FEBA02 transparent transparent transparent;
 }
 
 .rooms_table .room_name {
@@ -377,8 +438,8 @@ h2 {
     right: 0;
     padding: 5px;
     bottom: 0;
-    font-size: 11px;
-    width: 110px;
+    font-size: 10px;
+    width: 115px;
     text-align: center;
     color: #777;
 }
