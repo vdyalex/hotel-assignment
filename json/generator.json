@@ -45,9 +45,12 @@
       reviews: [
         '{{repeat(15,30)}}',
         {
-          score: '{{integer(1,10)}}',
-          comment: '{{lorem(1, "paragraphs")}}',
-          user: '{{firstName()}} {{surname()}}'
+          date: function() {
+          return date(new Date(2010), new Date()).getTime();
+        },
+        score: '{{integer(1,10)}}',
+        comment: '{{lorem(1, "paragraphs")}}',
+        user: '{{firstName()}} {{surname()}}'
         }
       ]
     }]

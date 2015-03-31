@@ -116,8 +116,8 @@ h2 {
 
 .reviews h2 small {
     float: right;
-    font-size: 12px;
-    margin: 5px 0;
+    font-size: 13px;
+    line-height: 15px;
 }
 
 .reviews_list {
@@ -356,7 +356,7 @@ h2 {
     font-size: 15px;
     text-decoration: none;
     color: #0896FF;
-    padding: 6px 14px;
+    padding: 6px 12px 6px 14px;
     background-color: #FFF;
     border-radius: 30px;
     opacity: 0.7;
@@ -394,4 +394,96 @@ h2 {
 
 #gallery .next {
     right: 32px;
+}
+
+/* selector of sorting */
+
+.sorting {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+.sorting > .dropdown {
+    position: relative;
+    float: left;
+}
+
+.sorting .dropdown {
+    position: relative;
+    display: inline-block;
+    padding: 4px 20px 4px 6px;
+    margin: 0;
+    margin-left: 2px;
+    font-size: 13px;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #0896FF;
+}
+
+.sorting .dropdown:after {
+    position: absolute;
+    right: 8px;
+    content: '';
+    width: 0;
+    height: 0;
+    border-style: solid;
+    top: calc(50% - 2px);
+    border-width: 4px 4px 0 4px;
+    border-color: #0896FF transparent transparent transparent;
+}
+
+.sorting ul {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 140px;
+    padding: 4px 0;
+    margin: 2px 0 0;
+    text-align: left;
+    list-style: outside none none;
+    background-color: #FFF;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.176);
+}
+
+.sorting.open .dropdown,
+.sorting:hover .dropdown{
+    border-color: #DDD;
+}
+
+.sorting.open ul {
+    display: block;
+}
+
+.sorting li {
+    font-size: 13px;
+    text-align: left;
+    list-style: outside none none;
+}
+
+.sorting li > a {
+    display: block;
+    padding: 4px 12px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857;
+    color: #333;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.sorting li > a:hover {
+    background-color: #F7F7F9;
 }

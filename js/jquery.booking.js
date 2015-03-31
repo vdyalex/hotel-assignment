@@ -1,11 +1,3 @@
-$(document).ready(function () {
-
-    $('#container').booking({
-        url: 'json/data.json'
-    });
-
-});
-
 (function ($, b, undefined) {
     b.booking = {
         options: {
@@ -44,7 +36,8 @@ $(document).ready(function () {
             },
             reviews:  {
                 asc: false,
-                field: 'score'
+                field: 'score',
+                text: 'Highest score'
             }
         };
 
@@ -55,12 +48,12 @@ $(document).ready(function () {
                         '<section class="description"><h2>Description</h2></section>' +
                         '<section class="facilities"><h2>Facilities</h2><ul class="facilities_list"></ul></section>' +
                         '<section class="rooms"><h2>Select Your Room</h2><form method="post" action="" class="rooms_table_form">' +
-                        '<table class="rooms_table" cellspacing="0" cellpadding="0"><thead><tr><th class="room_name"><a class="sort" data-value="name" href="javascript:;">Room Name</a></th><th class="room_occupancy"><a class="sort" data-value="occupancy" href="javascript:;">Occupancy</a></th><th class="room_price"><a class="sort" data-value="price_per_room" href="javascript:;">Price per Room</a></th><th class="room_quantity">No. Rooms</th></tr></thead><tbody></tbody><tfoot><tr><td></td><td class="total_room_occupancy"></td><td class="total_room_price"></td><td class="total_room_quantity"></td></tr><tr><td colspan="4"><button class="button" type="submit">Book Now</button></td></tr></tfoot></table></form></section>' +
-                        '<section class="reviews"><h2>Reviews<small><a href="javascript:;">Order by score</a></small></h2><ul class="reviews_list"></ul></section>',
+                        '<table class="rooms_table" cellspacing="0" cellpadding="0"><thead><tr><th class="room_name"><a class="sort" data-filter="name" href="javascript:;">Room Name</a></th><th class="room_occupancy"><a class="sort" data-filter="occupancy" href="javascript:;">Occupancy</a></th><th class="room_price"><a class="sort" data-filter="price_per_room" href="javascript:;">Price per Room</a></th><th class="room_quantity">No. Rooms</th></tr></thead><tbody></tbody><tfoot><tr><td></td><td class="total_room_occupancy"></td><td class="total_room_price"></td><td class="total_room_quantity"></td></tr><tr><td colspan="4"><button class="button" type="submit">Book Now</button></td></tr></tfoot></table></form></section>' +
+                        '<section class="reviews"><h2>Reviews<small>Sort by<div class="sorting"><a class="dropdown"></a><ul><li><a data-filter="highest_score" href="javascript:;">Highest score</a></li><li><a data-filter="lowest_score" href="javascript:;">Lowest score</a></li><li><a data-filter="most_recent" href="javascript:;">Most recent</a></li><li><a data-filter="most_older" href="javascript:;">Most older</a></li></ul></div></small></h2><ul class="reviews_list"></ul></section>',
 
             gallery:    '<div id="gallery">' +
                         '<div class="slides">' +
-                        '<a class="close" href="javascript:;">&times; Exit</a>' +
+                        '<a class="close" href="javascript:;">Exit <b>&times;</b></a>' +
                         '<div class="label"><h1 class="hotel_name"><span class="title"></span> <span class="stars"></span></h1><div class="text"></div></div>' +
                         '</div>' +
                         '<a class="prev" href="javascript:;">&#10094;</a><a class="next" href="javascript:;">&#10095;</a>' +
@@ -103,6 +96,7 @@ $(document).ready(function () {
             bk._setReviews(bk.data[offset].reviews);
 
             bk._setRoomsColumns();
+            bk._setReviewsFilters();
         };
 
         bk.navigate = function (offset) {
@@ -180,11 +174,11 @@ $(document).ready(function () {
 
         bk._setRooms = function (rooms) {
             var table = $(bk.element).find('.rooms_table');
-                table.find('tbody').html('');
-                table.find('thead a').removeClass('asc').removeClass('desc');
-                table.find(".sort[data-value='" + bk.order.rooms.field + "']").addClass((bk.order.rooms.asc ? 'asc' : 'desc'));
+            table.find('tbody').html('');
+            table.find('thead a').removeClass('asc').removeClass('desc');
+            table.find(".sort[data-filter='" + bk.order.rooms.field + "']").addClass((bk.order.rooms.asc ? 'asc' : 'desc'));
 
-                var r = rooms.sort(bk._sortRooms[(bk.order.rooms.asc ? 'asc' : 'desc')][bk.order.rooms.field]);
+            var r = rooms.sort(bk._sortRooms[(bk.order.rooms.asc ? 'asc' : 'desc')][bk.order.rooms.field]);
 
             for (var i = 0; i < r.length; i++) {
                 var s = '<td class="room_name">' + r[i].name + '</td>';
@@ -198,7 +192,7 @@ $(document).ready(function () {
 
         bk._setRoomsColumns = function () {
             $(bk.element).find('.rooms_table thead a').click(function() {
-                bk._orderRooms(!bk.order.rooms.asc, $(this).data('value'));
+                bk._orderRooms(!bk.order.rooms.asc, $(this).data('filter'));
             });
         };
 
@@ -212,43 +206,6 @@ $(document).ready(function () {
             };
 
             bk._setRooms(bk.data[bk.offset].rooms);
-        };
-
-        bk._setReviews = function (reviews) {
-            var list = $(bk.element).find('.reviews_list'), page = 5;
-
-            if (reviews.length < 5) page = reviews.length;
-
-            var asc = (bk.order.reviews.asc ? 'asc' : 'desc');
-
-            var r = reviews.sort(bk._sortReviews[asc][bk.order.reviews.field]);
-
-            for (var i = 0; i <= page - 1; i++) {
-                var s = '<strong class="review_score">' + r[i].score + '</strong>';
-                    s += '<blockquote class="review_content">';
-                    s += r[i].comment;
-                    s += '<cite>' + r[i].user + '</cite>';
-                    s += '</blockquote>';
-
-                list.append('<li>' + s + '</li>');
-            }
-        };
-
-        bk._orderReviews = function (asc, field) {
-            bk.order.reviews = {
-                asc: asc,
-                field: field
-            };
-
-            bk._setReviews(bk.data[bk.offset].reviews);
-        };
-
-        bk._setAvailability = function (rooms) {
-            var select = '';
-
-            for (var i = 0; i <= rooms.availability; i++) select += '<option value="' + i + '"' + (i == 0 ? ' selected="selected"' : '') + '>' + i + '</option>';
-
-            return '<select name="room[' + rooms.value + ']" data-value="' + rooms.price_per_room + '">' + select + '</select>';
         };
 
         bk._sortRooms = {
@@ -276,15 +233,92 @@ $(document).ready(function () {
             }
         };
 
+        bk._setAvailability = function (rooms) {
+            var select = '';
+
+            for (var i = 0; i <= rooms.availability; i++) select += '<option value="' + i + '"' + (i == 0 ? ' selected="selected"' : '') + '>' + i + '</option>';
+
+            return '<select name="room[' + rooms.value + ']" data-filter="' + rooms.price_per_room + '">' + select + '</select>';
+        };
+
+        bk._setReviews = function (reviews) {
+            var list = $(bk.element).find('.reviews_list'), page = 5;
+
+            $(bk.element).find('.sorting .dropdown').html(bk.order.reviews.text);
+
+            if (reviews.length < 5) page = reviews.length;
+
+            var r = reviews.sort(bk._sortReviews[(bk.order.reviews.asc ? 'asc' : 'desc')][bk.order.reviews.field]);
+
+            $(bk.element).find('.reviews_list').html('');
+
+            for (var i = 0; i <= page - 1; i++) {
+                var s = '<strong class="review_score">' + r[i].score + '</strong>';
+                    s += '<blockquote class="review_content">';
+                    s += r[i].comment;
+                    s += '<cite>' + r[i].user + '</cite>';
+                    s += '</blockquote>';
+
+                list.append('<li>' + s + '</li>');
+            }
+        };
+
+        bk._setReviewsFilters = function () {
+            $(bk.element).find('.sorting .dropdown').click(function(){
+                $(this).parent().toggleClass('open');
+            });
+
+            $(bk.element).find('.sorting li a').click(function(index, value) {
+                $(bk.element).find('.sorting').removeClass('open');
+                bk._orderReviews($(this).data('filter'));
+            });
+        };
+
+        bk._orderReviews = function (filter) {
+
+            filters = {
+                highest_score: {
+                    asc: false,
+                    field: 'score',
+                    text: 'Highest score'
+                },
+                lowest_score: {
+                    asc: true,
+                    field: 'score',
+                    text: 'Lowest score'
+                },
+                most_recent: {
+                    asc: false,
+                    field: 'date',
+                    text: 'Most recent'
+                },
+                most_older: {
+                    asc: true,
+                    field: 'date',
+                    text: 'Most older'
+                }
+            };
+
+            bk.order.reviews = filters[filter];
+
+            bk._setReviews(bk.data[bk.offset].reviews);
+        };
+
         bk._sortReviews = {
             asc: {
                 score: function (a, b) {
                     return bk._sort(a, b, 'score', true);
+                },
+                date: function (a, b) {
+                    return bk._sort(a, b, 'date', true);
                 }
             },
             desc: {
                 score: function(a, b) {
                     return bk._sort(a, b, 'score', false);
+                },
+                date: function(a, b) {
+                    return bk._sort(a, b, 'date', false);
                 }
             }
         };
