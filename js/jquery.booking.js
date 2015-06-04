@@ -470,7 +470,7 @@
 			$(bk.gallery).find('.slide .label .hotel_name .stars').html(bk._buildStars(bk.data[bk.offset].stars));
 			$(bk.gallery).find('.slide .label .hotel_address').html(bk.data[bk.offset].address);
 			$(bk.gallery).find('.slide .label .text').html(bk.data[bk.offset].photos[bk.slide].description);
-			$(bk.gallery).find('.slide .label .counter').html('Showing ' + (bk.slide + 1) + ' of ' + bk.data[bk.offset].photos.length + '.');
+			$(bk.gallery).find('.slide .label .counter').html('Showing ' + (bk.slide + 1) + ' of ' + bk.data[bk.offset].photos.length);
 			
 			if(!bk._checkLoaded()) {
 				clearInterval(bk.timer);
