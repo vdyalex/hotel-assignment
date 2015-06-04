@@ -103,7 +103,6 @@
         };
 
         bk.navigate = function (offset) {
-            console.log(offset);
             bk.run(offset);
         };
 
@@ -466,12 +465,22 @@
         };
 
         bk._changeSlide = function () {
-            $(bk.gallery).find('.slide').css('backgroundImage', 'url(' + bk.data[bk.offset].photos[bk.slide].image + ')');
-            $(bk.gallery).find('.slide .label .hotel_name .title').html(bk.data[bk.offset].name);
-            $(bk.gallery).find('.slide .label .hotel_name .stars').html(bk._buildStars(bk.data[bk.offset].stars));
-            $(bk.gallery).find('.slide .label .hotel_address').html(bk.data[bk.offset].address);
-            $(bk.gallery).find('.slide .label .text').html(bk.data[bk.offset].photos[bk.slide].description);
-            $(bk.gallery).find('.slide .label .counter').html('Showing photo ' + (bk.slide + 1) + ' of ' + bk.data[bk.offset].photos.length + '.');
+			$(bk.gallery).find('.slide').css('backgroundImage', 'url(' + bk.data[bk.offset].photos[bk.slide].image + ')');
+			$(bk.gallery).find('.slide .label .hotel_name .title').html(bk.data[bk.offset].name);
+			$(bk.gallery).find('.slide .label .hotel_name .stars').html(bk._buildStars(bk.data[bk.offset].stars));
+			$(bk.gallery).find('.slide .label .hotel_address').html(bk.data[bk.offset].address);
+			$(bk.gallery).find('.slide .label .text').html(bk.data[bk.offset].photos[bk.slide].description);
+			$(bk.gallery).find('.slide .label .counter').html('Showing photo ' + (bk.slide + 1) + ' of ' + bk.data[bk.offset].photos.length + '.');
+			
+			if(!bk._checkLoaded()) {
+				clearInterval(bk.timer);
+				
+				$(bk.gallery).on('loaded.image', function() {
+					bk.timer = setInterval(bk._nextSlideshow, 3000);
+					
+					$(bk.gallery).off('.image');
+				});
+			}
         };
 
         bk._startSlideshow = function () {
@@ -490,12 +499,23 @@
         bk._nextSlideshow = function () {
             bk.slide++;
             if(bk.slide > (bk.data[bk.offset].photos.length - 1)) bk.slide = 0;
-            bk._changeSlide();
+			bk._changeSlide();
         };
+		
+		bk._checkLoaded = function() {
+			if(bk.isPlaying) {
+				$('<img/>').hide().attr('src', bk.data[bk.offset].photos[bk.slide].image).load(function() {
+				   $(this).remove();
+				}, function(response, status, xhr) {
+					$(bk.gallery).trigger('loaded.image');
+				});
+				return false;
+			}
+			return true;
+		};
 
         bk._createListeners = function () {
             $(document.body).on('keydown', function(event) {
-                console.log(event.keyCode);
                 switch(event.which || event.keyCode) {
                     case 8: // Backspace
                     case 37: // Left arrow
