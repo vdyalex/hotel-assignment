@@ -104,7 +104,9 @@ h2 {
 .photos li img {
 	margin: 2px;
 	width: 80px;
+	height: 80px;
     border: 1px solid #FFF;
+	display: inline-block;
 }
 
 .photos li img:hover {
@@ -259,6 +261,7 @@ h2 {
 	color: #FFF;
 	font-weight: bold;
 	padding: 10px 5px;
+	white-space: nowrap;
 }
 
 .rooms_table th a {
@@ -376,7 +379,7 @@ h2 {
     z-index: 999999;
     overflow: hidden;
     background-color: rgba(0, 0, 0, 0.9);
-    background-image: url('../ico/preloader.gif');
+    background-image: url('../ico/gallery-preloader.gif');
     background-position: center center;
     background-repeat: no-repeat;
     opacity: 0;
@@ -419,25 +422,25 @@ h2 {
 #gallery .slide .label .slideshow {
     position: absolute;
     right: 0;
-    font-size: 36px;
-    color: #FFF;
     border-radius: 60px;
     background-color: #0896FF;
+    background-image: url('../ico/gallery-play-pause.png');
+    background-position: left top;
     cursor: pointer;
     width: 60px;
     height: 60px;
-    line-height: 60px;
-    text-align: center;
     margin: 30px;
     bottom: 0;
-    box-sizing: border-box;
-    padding: 0px 14px;
     z-index: 2000;
-    text-decoration: none;
+	text-indent: -9999em;
 }
 
 #gallery .slide .label .slideshow:hover {
     background-color: #003580;
+}
+
+#gallery .slide .label .slideshow.is-playing {
+    background-position: right top;
 }
 
 #gallery .slide .label .counter {
@@ -473,16 +476,16 @@ h2 {
 #gallery .next {
     position: absolute;
     top: 40%;
-    font-size: 26px;
     text-decoration: none;
     color: #0896FF;
     width: 48px;
     height: 48px;
-    line-height: 50px;
     border-radius: 50%;
     text-align: center;
     box-sizing: border-box;
     background-color: #FFF;
+	background-image: url('../ico/gallery-arrows.png');
+	text-indent: -9999em;
     opacity: 0.7;
 }
 
@@ -493,10 +496,12 @@ h2 {
 
 #gallery .prev {
     left: 32px;
+	background-position: left top;
 }
 
 #gallery .next {
     right: 32px;
+	background-position: right top;
 }
 
 /* selector of sorting */

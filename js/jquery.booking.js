@@ -60,9 +60,9 @@
             gallery:    '<div id="gallery">' +
                         '<div class="slide">' +
                         '<a class="close" href="javascript:;">Exit <b>&times;</b></a>' +
-                        '<div class="label"><h1 class="hotel_name"><span class="title"></span> <span class="stars"></span></h1><div class="text"></div><div class="counter"></div><a class="slideshow" href="javascript:;">&#9658;</a></div>' +
+                        '<div class="label"><h1 class="hotel_name"><span class="title"></span> <span class="stars"></span></h1><div class="text"></div><div class="counter"></div><a class="slideshow" href="javascript:;">Play</a></div>' +
                         '</div>' +
-                        '<a class="prev" href="javascript:;">&#10094;</a><a class="next" href="javascript:;">&#10095;</a>' +
+                        '<a class="prev" href="javascript:;">Previous</a><a class="next" href="javascript:;">Next</a>' +
                         '</div>'
         };
 
@@ -475,14 +475,14 @@
         };
 
         bk._startSlideshow = function () {
-            $(bk.gallery).find('.slideshow').html('&#10074;&#10074;');
+            $(bk.gallery).find('.slideshow').addClass('is-playing');
             clearInterval(bk.timer);
             bk.timer = setInterval(bk._nextSlideshow, 3000);
             bk.isPlaying = true;
         };
 
         bk._stopSlideshow = function () {
-            $(bk.gallery).find('.slideshow').html('&#9658;');
+            $(bk.gallery).find('.slideshow').removeClass('is-playing');
             clearInterval(bk.timer);
             bk.isPlaying = false;
         };
