@@ -465,6 +465,10 @@
         };
 
         bk._changeSlide = function () {
+			
+			// Fix Internet Explorer loader
+			$(bk.gallery).find('.slide').css('backgroundImage', 'none');
+			
 			$(bk.gallery).find('.slide').css('backgroundImage', 'url(' + bk.data[bk.offset].photos[bk.slide].image + ')');
 			$(bk.gallery).find('.slide .label .hotel_name .title').html(bk.data[bk.offset].name);
 			$(bk.gallery).find('.slide .label .hotel_name .stars').html(bk._buildStars(bk.data[bk.offset].stars));
