@@ -380,7 +380,7 @@ h2 {
     overflow: hidden;
     background-color: rgba(0, 0, 0, 0.9);
     background-image: url('../ico/gallery-preloader.gif');
-    background-position: center center;
+    background-position: center 45%;
     background-repeat: no-repeat;
     opacity: 0;
     display: none;
